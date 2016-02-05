@@ -35,9 +35,9 @@ namespace NuClear.Utils.Join
             var left = _left.OrderBy(_leftKeyExpression).GetEnumerator();
             var right = _right.OrderBy(_rightKeyExpression).GetEnumerator();
 
-            Func<bool> next = () => left.MoveNext() && right.MoveNext();
+            var hasNext = left.MoveNext() && right.MoveNext();
 
-            while (next.Invoke())
+            while (hasNext)
             {
                 var leftKey = leftKeyFunction.Invoke(left.Current);
                 var rightKey = rightKeyFunction.Invoke(right.Current);
@@ -47,10 +47,8 @@ namespace NuClear.Utils.Join
                     var leftAccumulator = new List<T1>();
                     var rightAccumulator = new List<T2>();
 
-                    next = Accumulate(leftAccumulator, leftKey, leftKeyFunction, left) &
-                           Accumulate(rightAccumulator, rightKey, rightKeyFunction, right)
-                        ? (Func<bool>) (() => true)
-                        : (Func<bool>) (() => false);
+                    hasNext = Accumulate(leftAccumulator, leftKey, leftKeyFunction, left) &
+                              Accumulate(rightAccumulator, rightKey, rightKeyFunction, right);
 
                     foreach (var leftItem in leftAccumulator)
                     {
@@ -62,9 +60,9 @@ namespace NuClear.Utils.Join
                 }
                 else
                 {
-                    next = comared > 0
-                        ? (Func<bool>)(() => right.MoveNext())
-                        : (Func<bool>)(() => left.MoveNext());
+                    hasNext = comared > 0
+                        ? right.MoveNext()
+                        : left.MoveNext();
                 }
             }
         }

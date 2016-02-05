@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
@@ -31,16 +30,6 @@ namespace NuClear.Utils.Join
             var result = Expression.Lambda(newBody).Compile().DynamicInvoke();
 
             Assert.That(result, Is.EqualTo(new[] { 4, 5, 6 }));
-        }
-
-        [Test]
-        public void X()
-        {
-            var q = new[] { 1, 2, 3 }.AsEnumerable();
-            var e = q.GetEnumerator();
-
-            while (e.MoveNext())
-                Debug.WriteLine(e.Current);
         }
     }
 }
