@@ -62,7 +62,7 @@ namespace NuClear.Utils.Join
 
         private static IQueryable<long> InmemoryJoin(IQueryable<Order> orders, IQueryable<OrderPosition> positions)
         {
-            return Factory.Create(orders, o => o.Id, positions, p => p.OrderId, (order, position) => order.Id);
+            return Factory.MemoryJoin(orders, o => o.Id, positions, p => p.OrderId, (order, position) => order.Id);
         }
 
         class Order

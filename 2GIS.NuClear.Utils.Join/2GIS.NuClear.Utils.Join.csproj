@@ -40,18 +40,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CountingQueryOptimizer.cs" />
     <Compile Include="Factory.cs" />
-    <Compile Include="IJoinStrategy.cs" />
-    <Compile Include="IJoinStrategyFactory.cs" />
+    <Compile Include="IJoiner.cs" />
+    <Compile Include="IQueryOptimizer.cs" />
     <Compile Include="ISecretMarker.cs" />
+    <Compile Include="Joiner.cs" />
     <Compile Include="MemoryJoinProvider.cs" />
     <Compile Include="MemoryJoinQueryable.cs" />
     <Compile Include="MethodReplasingRegistry.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Replacer.cs" />
-    <Compile Include="ReplacingVisitor.cs" />
-    <Compile Include="SimpleJoinStrategy.cs" />
-    <Compile Include="SimpleJoinStrategyFactory.cs" />
+    <Compile Include="SimpleQueryOptimizer.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

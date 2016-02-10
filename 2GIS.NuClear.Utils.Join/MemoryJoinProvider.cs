@@ -4,17 +4,22 @@ using System.Linq.Expressions;
 
 namespace NuClear.Utils.Join
 {
-    class MemoryJoinProvider<T1, T2, TResult> : IQueryProvider
+    internal class MemoryJoinProvider<T1, T2, TResult> : IQueryProvider
     {
-        // todo: материал для дальнейшего совершествования: http://blogs.msdn.com/b/mattwar/archive/2008/11/18/linq-links.aspx
+        // todo: http://blogs.msdn.com/b/mattwar/archive/2008/11/18/linq-links.aspx
 
-        private readonly IJoinStrategy<T1, T2> _joinStrategy;
-        private readonly Expression<Func<T1, T2, TResult>> _joinExpression;
+        private readonly IQueryable<T1> _left;
+        private readonly IQueryable<T2> _right;
 
-        public MemoryJoinProvider(IJoinStrategy<T1, T2> joinStrategy, Expression<Func<T1, T2, TResult>> joinExpression)
+        private readonly IQueryOptimizer<T1, T2> _queryOptimizer;
+        private readonly IJoiner<T1, T2, TResult> _joiner;
+
+        public MemoryJoinProvider(IQueryable<T1> left, IQueryable<T2> right, IQueryOptimizer<T1, T2> queryOptimizer, IJoiner<T1, T2, TResult> joiner)
         {
-            _joinStrategy = joinStrategy;
-            _joinExpression = joinExpression;
+            _left = left;
+            _right = right;
+            _queryOptimizer = queryOptimizer;
+            _joiner = joiner;
         }
 
         public IQueryable CreateQuery(Expression expression)
@@ -30,19 +35,29 @@ namespace NuClear.Utils.Join
 
         public object Execute(Expression expression)
         {
-            var join = _joinExpression.Compile();
-            var joinedData = _joinStrategy.Select(tuple => join.Invoke(tuple.Item1, tuple.Item2));
-
-            var result = Expression.Constant(joinedData);
-            var newBody = new Replacer().Convert(
-                node => node.NodeType == ExpressionType.Constant && ((ConstantExpression)node).Value is ISecretMarker ? result : node,
-                expression);
-            return Expression.Lambda(newBody).Compile().DynamicInvoke();
+            //return Expression.Lambda(ExcuteExpression(expression)).Compile().DynamicInvoke();
+            return Expression.Lambda<Func<object>>(ExcuteExpression(expression)).Compile().Invoke();
         }
 
-        public TResult Execute<TResult>(Expression expression)
+        public T Execute<T>(Expression expression)
         {
-            throw new NotImplementedException();
+            return Expression.Lambda<Func<T>>(ExcuteExpression(expression)).Compile().Invoke();
+        }
+
+        private Expression ExcuteExpression(Expression expression)
+        {
+            IQueryable<T1> left;
+            IQueryable<T2> right;
+            _queryOptimizer.TryOptimize(_left, _right, out left, out right);
+
+            var joinedSequence = _joiner.Join(left.GetEnumerator(), right.GetEnumerator());
+
+            var result = Expression.Constant(joinedSequence);
+            return new Replacer().Convert(
+                node => node.NodeType == ExpressionType.Constant && ((ConstantExpression) node).Value is ISecretMarker
+                        ? result
+                        : node,
+                expression);
         }
     }
 }

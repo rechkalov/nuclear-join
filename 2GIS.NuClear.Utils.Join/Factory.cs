@@ -5,19 +5,20 @@ using System.Linq.Expressions;
 
 namespace NuClear.Utils.Join
 {
-    public class Factory
+    public static class Factory
     {
-        public static IQueryable<TResult> Create<T1, T2, TKey, TResult>(
-            IQueryable<T1> left,
-            Expression<Func<T1, TKey>> leftKeyExpression,
+        public static IQueryable<TOut> MemoryJoin<T1, T2, TKey, TOut>(
+            this IQueryable<T1> left,
+            Expression<Func<T1, TKey>> leftKeySelector,
             IQueryable<T2> right,
-            Expression<Func<T2, TKey>> rightKeyExpression,
-            Expression<Func<T1, T2, TResult>> joinExpression)
+            Expression<Func<T2, TKey>> rightKeySelector,
+            Expression<Func<T1, T2, TOut>> mergeExpression)
             where TKey : IComparable
         {
-            var iterationStrategy = new SimpleJoinStrategy<T1, T2, TKey>(left, leftKeyExpression, right, rightKeyExpression, Comparer<TKey>.Default);
-            var provider = new MemoryJoinProvider<T1, T2, TResult>(iterationStrategy, joinExpression);
-            return new MemoryJoinQueryable<TResult>(provider);
+            var optimizer = new SimpleQueryOptimizer<T1, T2, TKey>(leftKeySelector, rightKeySelector);
+            var joiner = new Joiner<T1, T2, TKey, TOut>(leftKeySelector.Compile(), rightKeySelector.Compile(), Comparer<TKey>.Default, mergeExpression.Compile());
+            var provider = new MemoryJoinProvider<T1, T2, TOut>(left, right, optimizer, joiner);
+            return new MemoryJoinQueryable<TOut>(provider);
         }
     }
 }

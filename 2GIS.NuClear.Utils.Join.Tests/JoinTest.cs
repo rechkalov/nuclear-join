@@ -9,14 +9,14 @@ namespace NuClear.Utils.Join
         [TestCaseSource(nameof(DataSources))]
         public void TestJoinOnly(IEnumerable<Foo> foos, IEnumerable<Bar> bars, int expected)
         {
-            var joined = Factory.Create(foos.AsQueryable(), f => f.Id, bars.AsQueryable(), b => b.Id, (f, b) => new { FooName = f.Name, BarName = b.Name });
+            var joined = Factory.MemoryJoin(foos.AsQueryable(), f => f.Id, bars.AsQueryable(), b => b.Id, (f, b) => new { FooName = f.Name, BarName = b.Name });
             Assert.That(joined.ToArray(), Has.Length.EqualTo(expected));
         }
 
         [TestCaseSource(nameof(DataSources))]
         public void TestJoinWithPostExpression(IEnumerable<Foo> foos, IEnumerable<Bar> bars, int expected)
         {
-            var joined = Factory.Create(foos.AsQueryable(), f => f.Id, bars.AsQueryable(), b => b.Id, (f, b) => new { f.Id, FooName = f.Name, BarName = b.Name })
+            var joined = Factory.MemoryJoin(foos.AsQueryable(), f => f.Id, bars.AsQueryable(), b => b.Id, (f, b) => new { f.Id, FooName = f.Name, BarName = b.Name })
                 .Where(x => x.FooName != null) // todo: Влияет на сложность слияния, хочется, чтобы выполнялось до материализации.
                 .Select(x => x.BarName) // todo: Влияет на объём материализуемых данных
                 .ToArray();
