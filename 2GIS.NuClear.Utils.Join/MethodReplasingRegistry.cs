@@ -22,6 +22,10 @@ namespace NuClear.Utils.Join
                 GetGenericMethodInfo(Queryable.Select, default(IQueryable<object>), default(Expression<Func<object, object>>)),
                 GetGenericMethodInfo(Enumerable.Select, default(IEnumerable<object>), default(Func<object, object>))
             },
+            {
+                GetGenericMethodInfo(Queryable.Count, default(IQueryable<object>)),
+                GetGenericMethodInfo(Enumerable.Count, default(IEnumerable<object>))
+            },
         };
 
         public bool TryReplaceMethod(MethodInfo method, out MethodInfo replacedMethod)
