@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|AnyCPU">
+      <Configuration>Debug</Configuration>
+      <Platform>AnyCPU</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|AnyCPU">
+      <Configuration>Release</Configuration>
+      <Platform>AnyCPU</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\2GIS.NuClear.Utils.Join\2GIS.NuClear.Utils.Join.csproj" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>5634f0c4-3eac-4b95-b15f-7c9f18f36fd3</ProjectGuid>
+  </PropertyGroup>
+  <PropertyGroup>
+    <NuProjPath Condition=" '$(NuProjPath)' == '' ">$(MSBuildExtensionsPath)\NuProj\</NuProjPath>
+  </PropertyGroup>
+  <Import Project="$(NuProjPath)\NuProj.props" Condition="Exists('$(NuProjPath)\NuProj.props')" />
+  <PropertyGroup Label="Configuration">
+    <Id>2GIS.NuClear.Utils.Join</Id>
+    <Version>0.0.1</Version>
+    <Title>$(Id)</Title>
+    <Authors>2GIS</Authors>
+    <Owners>$(Authors)</Owners>
+    <Summary>NuClear.Utils.Join</Summary>
+    <Description>NuClear.Utils.Join</Description>
+    <ReleaseNotes>
+    </ReleaseNotes>
+    <ProjectUrl>
+    </ProjectUrl>
+    <LicenseUrl>
+    </LicenseUrl>
+    <Copyright>
+    </Copyright>
+    <Tags>NuClear Utils Join</Tags>
+    <EmbedSourceFiles>true</EmbedSourceFiles>
+  </PropertyGroup>
+  <Import Project="$(NuProjPath)\NuProj.targets" />
+</Project>

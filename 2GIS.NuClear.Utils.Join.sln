@@ -9,6 +9,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "2GIS.NuClear.Utils.Join.Tes
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "2GIS.NuClear.Utils.Join.Linq2Db.Tests", "2GIS.NuClear.Utils.Join.Linq2Db.Tests\2GIS.NuClear.Utils.Join.Linq2Db.Tests.csproj", "{E3505B14-8E17-41AE-8062-7CE9B3037F3B}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Packaging", "Packaging", "{F8841CD3-1B09-467B-8079-809E5F4CBAEC}"
+EndProject
+Project("{FF286327-C783-4F7A-AB73-9BCBAD0D4460}") = "NuClear.Utils.Join", "Packaging\NuClear.Utils.Join\NuClear.Utils.Join.nuproj", "{5634F0C4-3EAC-4B95-B15F-7C9F18F36FD3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,8 +31,15 @@ Global
 		{E3505B14-8E17-41AE-8062-7CE9B3037F3B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E3505B14-8E17-41AE-8062-7CE9B3037F3B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E3505B14-8E17-41AE-8062-7CE9B3037F3B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5634F0C4-3EAC-4B95-B15F-7C9F18F36FD3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5634F0C4-3EAC-4B95-B15F-7C9F18F36FD3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5634F0C4-3EAC-4B95-B15F-7C9F18F36FD3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5634F0C4-3EAC-4B95-B15F-7C9F18F36FD3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{5634F0C4-3EAC-4B95-B15F-7C9F18F36FD3} = {F8841CD3-1B09-467B-8079-809E5F4CBAEC}
 	EndGlobalSection
 EndGlobal
