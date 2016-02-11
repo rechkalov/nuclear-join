@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 
 namespace NuClear.Utils.Join
 {
@@ -31,7 +32,7 @@ namespace NuClear.Utils.Join
                 throw new ArgumentNullException(nameof(expression));
             }
 
-            if (!typeof(IQueryable<T>).IsAssignableFrom(expression.Type))
+            if (!typeof(IQueryable<T>).GetTypeInfo().IsAssignableFrom(expression.Type.GetTypeInfo()))
             {
                 throw new ArgumentOutOfRangeException(nameof(expression));
             }

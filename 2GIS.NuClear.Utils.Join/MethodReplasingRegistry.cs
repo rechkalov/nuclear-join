@@ -49,17 +49,17 @@ namespace NuClear.Utils.Join
 
         private static MethodInfo GetGenericMethodInfo<T1, T2>(Func<T1, T2> f, T1 unused1)
         {
-            return f.Method.GetGenericMethodDefinition();
+            return f.GetMethodInfo().GetGenericMethodDefinition();
         }
 
         private static MethodInfo GetGenericMethodInfo<T1, T2, T3>(Func<T1, T2, T3> f, T1 unused1, T2 unused2)
         {
-            return f.Method.GetGenericMethodDefinition();
+            return f.GetMethodInfo().GetGenericMethodDefinition();
         }
 
         private static MethodInfo GetGenericMethodInfo<T1, T2, T3, T4>(Func<T1, T2, T3, T4> f, T1 unused1, T2 unused2, T3 unused3)
         {
-            return f.Method.GetGenericMethodDefinition();
+            return f.GetMethodInfo().GetGenericMethodDefinition();
         }
     }
 }
