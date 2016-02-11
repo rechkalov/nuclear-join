@@ -13,7 +13,7 @@ namespace NuClear.Utils.Join
             IQueryable<T2> right,
             Expression<Func<T2, TKey>> rightKeySelector,
             Expression<Func<T1, T2, TOut>> mergeExpression)
-            where TKey : IComparable
+            where TKey : IComparable<TKey>
         {
             var optimizer = new SimpleQueryOptimizer<T1, T2, TKey>(leftKeySelector, rightKeySelector);
             var joiner = new Joiner<T1, T2, TKey, TOut>(leftKeySelector.Compile(), rightKeySelector.Compile(), Comparer<TKey>.Default, mergeExpression.Compile());
