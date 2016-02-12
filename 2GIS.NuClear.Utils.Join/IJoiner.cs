@@ -7,6 +7,6 @@ namespace NuClear.Utils.Join
         /// <summary>
         /// Объединяет две последовательности, основываясь на предположении, что они уже отсортированы по ключу слияния.
         /// </summary>
-        IEnumerable<TJoinResult> Join(IEnumerator<T1> left, IEnumerator<T2> right);
+        IEnumerable<TJoinResult> Join(IEnumerator<T1> outer, IEnumerator<T2> inner);
     }
 }

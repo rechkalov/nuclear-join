@@ -8,16 +8,16 @@ namespace NuClear.Utils.Join
     {
         // todo: http://blogs.msdn.com/b/mattwar/archive/2008/11/18/linq-links.aspx
 
-        private readonly IQueryable<T1> _left;
-        private readonly IQueryable<T2> _right;
+        private readonly IQueryable<T1> _outer;
+        private readonly IQueryable<T2> _inner;
 
         private readonly IQueryOptimizer<T1, T2> _queryOptimizer;
         private readonly IJoiner<T1, T2, TResult> _joiner;
 
-        public MemoryJoinProvider(IQueryable<T1> left, IQueryable<T2> right, IQueryOptimizer<T1, T2> queryOptimizer, IJoiner<T1, T2, TResult> joiner)
+        public MemoryJoinProvider(IQueryable<T1> outer, IQueryable<T2> inner, IQueryOptimizer<T1, T2> queryOptimizer, IJoiner<T1, T2, TResult> joiner)
         {
-            _left = left;
-            _right = right;
+            _outer = outer;
+            _inner = inner;
             _queryOptimizer = queryOptimizer;
             _joiner = joiner;
         }
@@ -45,11 +45,11 @@ namespace NuClear.Utils.Join
 
         private Expression ExcuteExpression(Expression expression)
         {
-            IQueryable<T1> left;
-            IQueryable<T2> right;
-            _queryOptimizer.TryOptimize(_left, _right, out left, out right);
+            IQueryable<T1> outer;
+            IQueryable<T2> inner;
+            _queryOptimizer.TryOptimize(_outer, _inner, out outer, out inner);
 
-            var joinedSequence = _joiner.Join(left.GetEnumerator(), right.GetEnumerator());
+            var joinedSequence = _joiner.Join(outer.GetEnumerator(), inner.GetEnumerator());
 
             var result = Expression.Constant(joinedSequence);
             return new Replacer().Convert(

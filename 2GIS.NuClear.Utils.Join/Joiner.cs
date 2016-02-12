@@ -5,54 +5,54 @@ namespace NuClear.Utils.Join
 {
     public sealed class Joiner<T1, T2, TKey, TOut> : IJoiner<T1, T2, TOut>
     {
-        private readonly Func<T1, TKey> _leftKeyFunction;
-        private readonly Func<T2, TKey> _rightKeyFunction;
+        private readonly Func<T1, TKey> _outerKeySelector;
+        private readonly Func<T2, TKey> _innerKeySelector;
+        private readonly Func<T1, T2, TOut> _resultSelector;
         private readonly IComparer<TKey> _keyComparer;
-        private readonly Func<T1, T2, TOut> _join;
 
-        public Joiner(Func<T1, TKey> leftKeyFunction, Func<T2, TKey> rightKeyFunction, IComparer<TKey> keyComparer, Func<T1, T2, TOut> join)
+        public Joiner(Func<T1, TKey> outerKeySelector, Func<T2, TKey> innerKeySelector, Func<T1, T2, TOut> resultSelector, IComparer<TKey> keyComparer)
         {
-            _leftKeyFunction = leftKeyFunction;
-            _rightKeyFunction = rightKeyFunction;
+            _outerKeySelector = outerKeySelector;
+            _innerKeySelector = innerKeySelector;
+            _resultSelector = resultSelector;
             _keyComparer = keyComparer;
-            _join = join;
         }
 
-        public IEnumerable<TOut> Join(IEnumerator<T1> left, IEnumerator<T2> right)
+        public IEnumerable<TOut> Join(IEnumerator<T1> outer, IEnumerator<T2> inner)
         {
-            var hasNext = left.MoveNext() && right.MoveNext();
+            var hasNext = outer.MoveNext() && inner.MoveNext();
 
             while (hasNext)
             {
-                var leftKey = _leftKeyFunction.Invoke(left.Current);
-                var rightKey = _rightKeyFunction.Invoke(right.Current);
-                var comared = _keyComparer.Compare(leftKey, rightKey);
+                var outerKey = _outerKeySelector.Invoke(outer.Current);
+                var innerKey = _innerKeySelector.Invoke(inner.Current);
+                var comared = _keyComparer.Compare(outerKey, innerKey);
                 if (comared == 0)
                 {
-                    var leftAccumulator = new List<T1>();
-                    var rightAccumulator = new List<T2>();
+                    var outerAccumulator = new List<T1>();
+                    var innerAccumulator = new List<T2>();
 
-                    hasNext = Accumulate(leftAccumulator, leftKey, _leftKeyFunction, left) &
-                              Accumulate(rightAccumulator, rightKey, _rightKeyFunction, right);
+                    hasNext = Accumulate(outerAccumulator, outerKey, _outerKeySelector, outer) &
+                              Accumulate(innerAccumulator, innerKey, _innerKeySelector, inner);
 
-                    foreach (var leftItem in leftAccumulator)
+                    foreach (var outerItem in outerAccumulator)
                     {
-                        foreach (var rightItem in rightAccumulator)
+                        foreach (var innerItem in innerAccumulator)
                         {
-                            yield return _join.Invoke(leftItem, rightItem);
+                            yield return _resultSelector.Invoke(outerItem, innerItem);
                         }
                     }
                 }
                 else
                 {
                     hasNext = comared > 0
-                        ? right.MoveNext()
-                        : left.MoveNext();
+                        ? inner.MoveNext()
+                        : outer.MoveNext();
                 }
             }
 
-            left.Dispose();
-            right.Dispose();
+            outer.Dispose();
+            inner.Dispose();
         }
 
         private bool Accumulate<T>(List<T> accumulator, TKey key, Func<T, TKey> keyExtractor, IEnumerator<T> data)
