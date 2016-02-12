@@ -22,7 +22,7 @@
   <Import Project="$(NuProjPath)\NuProj.props" Condition="Exists('$(NuProjPath)\NuProj.props')" />
   <PropertyGroup Label="Configuration">
     <Id>2GIS.NuClear.Utils.Join</Id>
-    <Version>0.0.6</Version>
+    <Version>0.0.7</Version>
     <Title>$(Id)</Title>
     <Authors>2GIS</Authors>
     <Owners>$(Authors)</Owners>

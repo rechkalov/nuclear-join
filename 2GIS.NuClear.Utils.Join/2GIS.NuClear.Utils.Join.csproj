@@ -42,6 +42,7 @@
     <Compile Include="IJoiner.cs" />
     <Compile Include="IQueryOptimizer.cs" />
     <Compile Include="ISecretMarker.cs" />
+    <Compile Include="GroupJoiner.cs" />
     <Compile Include="Joiner.cs" />
     <Compile Include="MemoryJoinProvider.cs" />
     <Compile Include="MemoryJoinQueryable.cs" />
