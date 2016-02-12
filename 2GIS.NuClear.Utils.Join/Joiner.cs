@@ -50,6 +50,9 @@ namespace NuClear.Utils.Join
                         : left.MoveNext();
                 }
             }
+
+            left.Dispose();
+            right.Dispose();
         }
 
         private bool Accumulate<T>(List<T> accumulator, TKey key, Func<T, TKey> keyExtractor, IEnumerator<T> data)

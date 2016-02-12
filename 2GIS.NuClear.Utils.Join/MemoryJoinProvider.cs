@@ -35,7 +35,6 @@ namespace NuClear.Utils.Join
 
         public object Execute(Expression expression)
         {
-            //return Expression.Lambda(ExcuteExpression(expression)).Compile().DynamicInvoke();
             return Expression.Lambda<Func<object>>(ExcuteExpression(expression)).Compile().Invoke();
         }
 

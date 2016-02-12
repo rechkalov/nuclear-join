@@ -30,29 +30,55 @@ namespace NuClear.Utils.Join
             Test(InmemoryJoin, Throws.Nothing);
         }
 
+        [Test]
+        public void ResourcesShouldBeFreed()
+        {
+            using (var source1 = CreateOrdersDbConnection())
+            using (var source2 = CreateOrderPositionsDbConnection())
+            {
+                var orders = source1.GetTable<Order>().Where(x => x.Id < 10);
+                var positions = source2.GetTable<OrderPosition>().Where(x => 5 < x.OrderId && x.OrderId < 20);
+                var join = Factory.MemoryJoin(orders, o => o.Id, positions, p => p.OrderId, (order, position) => order.Id).ToArray();
+
+                Assert.That(() => join.ToArray(), Throws.Nothing);
+                Assert.That(() => orders.ToArray(), Throws.Nothing);
+                Assert.That(() => positions.ToArray(), Throws.Nothing);
+            }
+        }
+
         private static void Test(Func<IQueryable<Order>, IQueryable<OrderPosition>, IQueryable<long>> func, IResolveConstraint expected)
         {
-            var schema1 = new MappingSchema();
-            schema1.GetFluentMappingBuilder()
-                .Entity<Order>()
-                .HasSchemaName("Billing")
-                .HasTableName("Orders");
-
-            var schema2 = new MappingSchema();
-            schema2.GetFluentMappingBuilder()
-                .Entity<OrderPosition>()
-                .HasSchemaName("Billing")
-                .HasTableName("OrderPositions");
-
-            using (var source1 = new DataConnection("Source1").AddMappingSchema(schema1))
-            using (var source2 = new DataConnection("Source2").AddMappingSchema(schema2))
+            using (var source1 = CreateOrdersDbConnection())
+            using (var source2 = CreateOrderPositionsDbConnection())
             {
-                var orders = source1.GetTable<Order>().Where(x => x.Id < 100);
-                var positions = source2.GetTable<OrderPosition>().Where(x => x.Id < 100);
+                var orders = source1.GetTable<Order>().Where(x => x.Id < 1000);
+                var positions = source2.GetTable<OrderPosition>().Where(x => x.OrderId < 2000);
                 var join = func.Invoke(orders, positions);
 
                 Assert.That(() => join.ToArray(), expected);
             }
+        }
+
+        private static DataConnection CreateOrdersDbConnection()
+        {
+            var schema = new MappingSchema();
+            schema.GetFluentMappingBuilder()
+                .Entity<Order>()
+                .HasSchemaName("Billing")
+                .HasTableName("Orders");
+
+            return new DataConnection("Source1").AddMappingSchema(schema);
+        }
+
+        private static DataConnection CreateOrderPositionsDbConnection()
+        {
+            var schema = new MappingSchema();
+            schema.GetFluentMappingBuilder()
+                .Entity<OrderPosition>()
+                .HasSchemaName("Billing")
+                .HasTableName("OrderPositions");
+
+            return new DataConnection("Source2").AddMappingSchema(schema);
         }
 
         private static IQueryable<long> ClassicJoin(IQueryable<Order> orders, IQueryable<OrderPosition> positions)
