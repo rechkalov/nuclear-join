@@ -10,7 +10,7 @@ namespace NuClear.Utils.Join
         [TestCaseSource(nameof(DataSources))]
         public void TestJoinOnly(IEnumerable<Foo> foos, IEnumerable<Foo> bars)
         {
-            var actual = Factory.MemoryGroupJoin(foos.AsQueryable(), f => f.Id, bars.AsQueryable(), b => b.Id, (f, b) => new { Id = f.Id, BarCount = b.Count() });
+            var actual = Factory.MemoryGroupJoin(foos.AsQueryable(), bars.AsQueryable(), f => f.Id, b => b.Id, (f, b) => new { Id = f.Id, BarCount = b.Count() });
             var expected = foos.GroupJoin(bars, f => f.Id, i => i.Id, (f, b) => new { Id = f.Id, BarCount = b.Count() });
 
             Assert.That(actual.ToArray(), Is.EquivalentTo(expected));

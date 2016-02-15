@@ -9,13 +9,13 @@ namespace NuClear.Utils.Join
     {
         public static IQueryable<TOut> MemoryJoin<T1, T2, TKey, TOut>(
             this IQueryable<T1> outer,
-            Expression<Func<T1, TKey>> outerKeySelector,
             IQueryable<T2> inner,
+            Expression<Func<T1, TKey>> outerKeySelector,
             Expression<Func<T2, TKey>> innerKeySelector,
             Expression<Func<T1, T2, TOut>> resultSelector)
             where TKey : IComparable<TKey>
         {
-            return MemoryJoin(outer, outerKeySelector, inner, innerKeySelector, resultSelector, Comparer<TKey>.Default);
+            return MemoryJoin(outer, inner, outerKeySelector, innerKeySelector, resultSelector, Comparer<TKey>.Default);
         }
 
         /// <summary>
@@ -23,13 +23,13 @@ namespace NuClear.Utils.Join
         /// </summary>
         public static IQueryable<TOut> MemoryJoin<T1, T2, TKey, TOut>(
             this IQueryable<T1> outer,
-            Expression<Func<T1, TKey>> outerKeySelector,
             IQueryable<T2> inner,
+            Expression<Func<T1, TKey>> outerKeySelector,
             Expression<Func<T2, TKey>> innerKeySelector,
             Expression<Func<T1, T2, TOut>> resultSelector,
             Comparison<TKey> comparison)
         {
-            return MemoryJoin(outer, outerKeySelector, inner, innerKeySelector, resultSelector, Comparer<TKey>.Create(comparison));
+            return MemoryJoin(outer, inner, outerKeySelector, innerKeySelector, resultSelector, Comparer<TKey>.Create(comparison));
         }
 
         /// <summary>
@@ -37,8 +37,8 @@ namespace NuClear.Utils.Join
         /// </summary>
         public static IQueryable<TOut> MemoryJoin<T1, T2, TKey, TOut>(
             this IQueryable<T1> outer,
-            Expression<Func<T1, TKey>> outerKeySelector,
             IQueryable<T2> inner,
+            Expression<Func<T1, TKey>> outerKeySelector,
             Expression<Func<T2, TKey>> innerKeySelector,
             Expression<Func<T1, T2, TOut>> resultSelector,
             IComparer<TKey> comparer)
@@ -51,13 +51,13 @@ namespace NuClear.Utils.Join
 
         public static IQueryable<TOut> MemoryGroupJoin<T1, T2, TKey, TOut>(
             this IQueryable<T1> outer,
-            Expression<Func<T1, TKey>> outerKeySelector,
             IQueryable<T2> inner,
+            Expression<Func<T1, TKey>> outerKeySelector,
             Expression<Func<T2, TKey>> innerKeySelector,
             Expression<Func<T1, IEnumerable<T2>, TOut>> resultSelector)
             where TKey : IComparable<TKey>
         {
-            return MemoryGroupJoin(outer, outerKeySelector, inner, innerKeySelector, resultSelector, Comparer<TKey>.Default);
+            return MemoryGroupJoin(outer, inner, outerKeySelector, innerKeySelector, resultSelector, Comparer<TKey>.Default);
         }
 
         /// <summary>
@@ -65,13 +65,13 @@ namespace NuClear.Utils.Join
         /// </summary>
         public static IQueryable<TOut> MemoryGroupJoin<T1, T2, TKey, TOut>(
             this IQueryable<T1> outer,
-            Expression<Func<T1, TKey>> outerKeySelector,
             IQueryable<T2> inner,
+            Expression<Func<T1, TKey>> outerKeySelector,
             Expression<Func<T2, TKey>> innerKeySelector,
             Expression<Func<T1, IEnumerable<T2>, TOut>> resultSelector,
             Comparison<TKey> comparison)
         {
-            return MemoryGroupJoin(outer, outerKeySelector, inner, innerKeySelector, resultSelector, Comparer<TKey>.Create(comparison));
+            return MemoryGroupJoin(outer, inner, outerKeySelector, innerKeySelector, resultSelector, Comparer<TKey>.Create(comparison));
         }
 
         /// <summary>
@@ -79,8 +79,8 @@ namespace NuClear.Utils.Join
         /// </summary>
         public static IQueryable<TOut> MemoryGroupJoin<T1, T2, TKey, TOut>(
             this IQueryable<T1> outer,
-            Expression<Func<T1, TKey>> outerKeySelector,
             IQueryable<T2> inner,
+            Expression<Func<T1, TKey>> outerKeySelector,
             Expression<Func<T2, TKey>> innerKeySelector,
             Expression<Func<T1, IEnumerable<T2>, TOut>> resultSelector,
             IComparer<TKey> comparer)

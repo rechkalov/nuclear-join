@@ -38,7 +38,7 @@ namespace NuClear.Utils.Join
             {
                 var orders = source1.GetTable<Order>().Where(x => x.Id < 10);
                 var positions = source2.GetTable<OrderPosition>().Where(x => 5 < x.OrderId && x.OrderId < 20);
-                var join = Factory.MemoryJoin(orders, o => o.Id, positions, p => p.OrderId, (order, position) => order.Id).ToArray();
+                var join = Factory.MemoryJoin(orders, positions, o => o.Id, p => p.OrderId, (order, position) => order.Id).ToArray();
 
                 Assert.That(() => join.ToArray(), Throws.Nothing);
                 Assert.That(() => orders.ToArray(), Throws.Nothing);
@@ -88,7 +88,7 @@ namespace NuClear.Utils.Join
 
         private static IQueryable<long> InmemoryJoin(IQueryable<Order> orders, IQueryable<OrderPosition> positions)
         {
-            return Factory.MemoryJoin(orders, o => o.Id, positions, p => p.OrderId, (order, position) => order.Id);
+            return Factory.MemoryJoin(orders, positions, o => o.Id, p => p.OrderId, (order, position) => order.Id);
         }
 
         class Order

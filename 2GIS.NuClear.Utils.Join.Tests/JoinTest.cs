@@ -9,7 +9,7 @@ namespace NuClear.Utils.Join
         [TestCaseSource(nameof(DataSources))]
         public void TestJoinOnly(IEnumerable<Foo> foos, IEnumerable<Bar> bars)
         {
-            var actual = Factory.MemoryJoin(foos.AsQueryable(), f => f.Id, bars.AsQueryable(), b => b.Id, (f, b) => new { FooName = f.Name, BarName = b.Name });
+            var actual = Factory.MemoryJoin(foos.AsQueryable(), bars.AsQueryable(), f => f.Id, b => b.Id, (f, b) => new { FooName = f.Name, BarName = b.Name });
             var expected = foos.Join(bars, f => f.Id, b => b.Id, (f, b) => new { FooName = f.Name, BarName = b.Name });
             Assert.That(actual.ToArray(), Is.EquivalentTo(expected));
         }
@@ -17,7 +17,7 @@ namespace NuClear.Utils.Join
         [TestCaseSource(nameof(DataSources))]
         public void TestJoinWithPostExpression(IEnumerable<Foo> foos, IEnumerable<Bar> bars)
         {
-            var joined = Factory.MemoryJoin(foos.AsQueryable(), f => f.Id, bars.AsQueryable(), b => b.Id, (f, b) => new { f.Id, FooName = f.Name, BarName = b.Name })
+            var joined = Factory.MemoryJoin(foos.AsQueryable(), bars.AsQueryable(), f => f.Id, b => b.Id, (f, b) => new { f.Id, FooName = f.Name, BarName = b.Name })
                 .Where(x => x.FooName != null) // todo: Влияет на сложность слияния, хочется, чтобы выполнялось до материализации.
                 .Select(x => x.BarName) // todo: Влияет на объём материализуемых данных
                 .ToArray();
